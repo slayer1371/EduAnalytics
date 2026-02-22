@@ -16,8 +16,8 @@ export async function generateStudentRecommendations(studentId: string) {
   // 2. Aggregate performance by skill
   const skillStats: Record<string, { total: number; correct: number; skill: any }> = {}
   
-  responses.forEach(r => {
-    r.question.skills.forEach(qs => {
+  responses.forEach((r: any) => {
+    r.question.skills.forEach((qs: any) => {
       const skillId = qs.skillId
       const skill = qs.skill
       
@@ -45,7 +45,7 @@ export async function generateStudentRecommendations(studentId: string) {
       })
 
       // Generate a recommendation linking the student to each resource
-      linkedResources.forEach(lr => {
+      linkedResources.forEach((lr: any) => {
         // Calculate a "priority score" (lower mastery = higher score)
         const priorityScore = 100 - masteryPercent
         
@@ -60,7 +60,7 @@ export async function generateStudentRecommendations(studentId: string) {
   }
 
   // 4. Save to database (Upsert / Replace for simplicity)
-  await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx: any) => {
     // Delete old recommendations for these skills
     await tx.recommendation.deleteMany({
       where: { studentId, skillId: { in: Object.keys(skillStats) } }

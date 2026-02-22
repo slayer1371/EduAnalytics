@@ -38,7 +38,7 @@ export async function GET(
     const skillStats: Record<string, { total: number, correct: number, name: string, subject: string }> = {}
     let sortedAssessments = new Set()
 
-    responses.forEach(r => {
+    responses.forEach((r: any) => {
       sortedAssessments.add(r.question.assessment.title)
       r.question.skills.forEach((qs: any) => {
         const sid = qs.skillId
@@ -68,7 +68,7 @@ export async function GET(
         stats: {
           assessmentsTaken: sortedAssessments.size,
           totalQuestions: responses.length,
-          overallScore: responses.length > 0 ? Math.round((responses.filter(r => r.correct).length / responses.length) * 100) : 0
+          overallScore: responses.length > 0 ? Math.round((responses.filter((r: any) => r.correct).length / responses.length) * 100) : 0
         },
         skillCharts,
         recommendations
