@@ -136,7 +136,7 @@ export default function DashboardPage() {
                     cursor={{ fill: "rgba(26,26,46,0.03)" }}
                     contentStyle={{ backgroundColor: "#faf8f3", borderColor: "#e5e2db", borderRadius: "10px", color: "#1a1a2e", fontSize: "13px" }}
                     itemStyle={{ color: "#1a1a2e", fontWeight: "bold" }}
-                    formatter={(val: number) => [`${val}%`, "Mastery"]}
+                    formatter={(val: number | undefined) => [`${val ?? 0}%`, "Mastery"]}
                   />
                   <Bar dataKey="mastery" radius={[4, 4, 0, 0]}>
                     {data.skillCharts.map((entry, index) => (

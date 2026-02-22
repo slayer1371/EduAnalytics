@@ -26,18 +26,21 @@ export async function GET(
     const responses = await prisma.studentResponse.findMany({
       where: { studentId: id },
       include: {
-        question: { include: { skills: { include: { skill: true } } } },
-        assessment: { select: { title: true, date: true } }
+        question: {
+          include: {
+            skills: { include: { skill: true } },
+            assessment: { select: { title: true, date: true } }
+          }
+        },
       },
-      orderBy: { createdAt: "desc" }
     })
 
     const skillStats: Record<string, { total: number, correct: number, name: string, subject: string }> = {}
     let sortedAssessments = new Set()
 
     responses.forEach(r => {
-      sortedAssessments.add(r.assessment.title)
-      r.question.skills.forEach(qs => {
+      sortedAssessments.add(r.question.assessment.title)
+      r.question.skills.forEach((qs: any) => {
         const sid = qs.skillId
         if (!skillStats[sid]) {
           skillStats[sid] = { total: 0, correct: 0, name: qs.skill.name, subject: qs.skill.subject }
