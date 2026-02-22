@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String         @id @default(cuid())
+  email        String         @unique
+  passwordHash String
+  name         String
+  assessments  Assessment[]
+  groups       StudentGroup[]
+}
+
+model Assessment {
+  id          String     @id @default(cuid())
+  title       String
+  date        DateTime
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rawPdfUrl   String
+  createdAt   DateTime   @default(now())
+  questions   Question[]
+}
+
+model Question {
+  id             String            @id @default(cuid())
+  assessmentId   String
+  assessment     Assessment        @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  questionNumber Int
+  questionText   String
+  correctAnswer  String
+  skills         QuestionSkill[]
+  responses      StudentResponse[]
+}
+
+model Skill {
+  id             String           @id @default(cuid())
+  name           String
+  description    String
+  subject        String
+  gradeLevel     String
+  questions      QuestionSkill[]
+  resources      SkillResource[]
+  recommendations Recommendation[]
+}
+
+model QuestionSkill {
+  id         String   @id @default(cuid())
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  skillId    String
+  skill      Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+}
+
+model StudentGroup {
+  id       String    @id @default(cuid())
+  name     String
+  userId   String
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  students Student[]
+}
+
+model Student {
+  id              String            @id @default(cuid())
+  name            String
+  groupId         String
+  group           StudentGroup      @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  responses       StudentResponse[]
+  recommendations Recommendation[]
+}
+
+model StudentResponse {
+  id         String   @id @default(cuid())
+  studentId  String
+  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  response   String
+  correct    Boolean
+}
+
+model Resource {
+  id              String           @id @default(cuid())
+  title           String
+  url             String
+  type            String
+  description     String
+  skills          SkillResource[]
+  recommendations Recommendation[]
+}
+
+model SkillResource {
+  id         String   @id @default(cuid())
+  skillId    String
+  skill      Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  resourceId String
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+}
+
+model Recommendation {
+  id         String   @id @default(cuid())
+  studentId  String
+  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  skillId    String
+  skill      Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  resourceId String
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  score      Float
+  createdAt  DateTime @default(now())
+}
