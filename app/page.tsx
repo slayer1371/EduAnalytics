@@ -1,65 +1,82 @@
-import Image from "next/image";
+import Link from "next/link"
+import { ArrowRight, BarChart3, ScanText, Target } from "lucide-react"
 
-export default function Home() {
+export default function LandingPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-parchment text-ink overflow-hidden relative">
+      {/* Subtle warm gradient at top */}
+      <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-amber-muted to-transparent pointer-events-none" />
+
+      <nav className="relative z-10 flex items-center justify-between p-6 max-w-6xl mx-auto animate-fade-up">
+        <div className="font-serif text-2xl text-ink tracking-tight">
+          EduAnalytics
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="flex items-center space-x-5">
+          <Link href="/login" className="text-slate hover:text-ink transition-colors font-medium text-sm">
+            Sign In
+          </Link>
+          <Link href="/register" className="btn-primary text-sm">
+            Get Started
+          </Link>
+        </div>
+      </nav>
+
+      <main className="relative z-10 max-w-6xl mx-auto px-6 pt-16 pb-32 flex flex-col items-center text-center">
+        {/* Editorial pill badge */}
+        <div className="animate-fade-up-delay-1 inline-flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-amber-muted text-sm font-semibold mb-10" style={{ color: '#b07d1e' }}>
+          <span className="flex h-1.5 w-1.5 rounded-full bg-amber" />
+          <span>MVP Edition v1.0</span>
+        </div>
+        
+        <h1 className="animate-fade-up-delay-1 font-serif text-5xl md:text-7xl tracking-tight mb-8 leading-[1.1]">
+          Turn Assessments Into <br />
+          <span className="text-amber italic">
+            Targeted Action
+          </span>
+        </h1>
+        
+        <p className="animate-fade-up-delay-2 text-lg text-slate max-w-2xl mb-12 leading-relaxed">
+          Upload PDF assessments, instantly detect skill gaps using OCR, and generate personalized instructional recommendations for every student.
+        </p>
+        
+        <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-28">
+          <Link href="/register" className="btn-primary group px-8 py-3.5 text-base">
+            <span>Start Analyzing Now</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+          <Link href="/login" className="btn-ghost px-8 py-3.5 text-base">
+            View Live Demo
+          </Link>
+        </div>
+
+        {/* Feature Grid */}
+        <div className="grid md:grid-cols-3 gap-6 w-full max-w-5xl text-left">
+          <div className="card accent-left-amber p-7 animate-fade-up-delay-1 hover:translate-y-[-2px] transition-transform">
+            <div className="w-11 h-11 rounded-xl bg-amber-muted flex items-center justify-center mb-5">
+              <ScanText className="text-amber w-5 h-5" style={{ color: '#b07d1e' }} />
+            </div>
+            <h3 className="font-serif text-xl text-ink mb-2">Instant OCR Ingestion</h3>
+            <p className="text-slate text-sm leading-relaxed">Drag and drop printed assessments. We'll automatically digitize questions and student responses.</p>
+          </div>
+          <div className="card accent-left-sage p-7 animate-fade-up-delay-2 hover:translate-y-[-2px] transition-transform">
+            <div className="w-11 h-11 rounded-xl bg-sage-muted flex items-center justify-center mb-5">
+              <Target className="text-sage w-5 h-5" />
+            </div>
+            <h3 className="font-serif text-xl text-ink mb-2">Skill Map Tracking</h3>
+            <p className="text-slate text-sm leading-relaxed">Tag every question to standard skills and watch as student mastery is charted automatically over time.</p>
+          </div>
+          <div className="card accent-left-terracotta p-7 animate-fade-up-delay-3 hover:translate-y-[-2px] transition-transform">
+            <div className="w-11 h-11 rounded-xl bg-terracotta-muted flex items-center justify-center mb-5">
+              <BarChart3 className="text-terracotta w-5 h-5" />
+            </div>
+            <h3 className="font-serif text-xl text-ink mb-2">Actionable Insights</h3>
+            <p className="text-slate text-sm leading-relaxed">Stop guessing. Our dashboard highlights critical skill gaps and recommends exact resources to close them.</p>
+          </div>
         </div>
       </main>
+
+      {/* Footer line */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-border" />
     </div>
-  );
+  )
 }
