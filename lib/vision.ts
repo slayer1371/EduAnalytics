@@ -33,7 +33,7 @@ export async function extractHandwrittenAnswers(imageBase64: string, mimeType: s
     CRITICAL INSTRUCTIONS:
     1. Ignore any scratchpad working out (e.g. long division steps in the margins).
     2. Ignore any teacher markings like red/blue checkmarks, 'corrected' text, or point deductions (e.g. -1/2).
-    3. Look for the student's final answer, which might be on an answer line or circled.
+    3. Look for the student's final answer, which might be on an answer line, circled, OR on the Left-Hand Side (LHS) of the sentence (e.g. if the question is "__ / 10 = 2.73", the answer is inside the blank).
     4. If a single question or question number has multiple sub-parts (e.g., multiple fill-in-the-blanks or multiple equations), extract the student's final answer for EVERY part. Join them together using a single semicolon (;) in the order they appear on the page (top to bottom, left to right).
 
     Return the data EXACTLY as a JSON object, where the key is the question number (e.g. "1", "2", "3") 

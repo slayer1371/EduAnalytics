@@ -31,6 +31,9 @@ export async function POST(req: Request) {
 
     const { studentId, assessment } = submission
 
+    // Helper to remove all spacing and ignore case for robust grading
+    const normalizeAnswer = (str: string) => (str || "").replace(/\s+/g, "").toLowerCase()
+    
     // 2. Grade the provided answers against the correct answers and prepare DB records
     const studentResponses: any[] = []
     
@@ -39,7 +42,7 @@ export async function POST(req: Request) {
       const studentExtractedAnswer = answers[String(question.questionNumber)]
       
       const isCorrect = studentExtractedAnswer 
-         ? studentExtractedAnswer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase()
+         ? normalizeAnswer(studentExtractedAnswer) === normalizeAnswer(question.correctAnswer)
          : false
 
       studentResponses.push({
