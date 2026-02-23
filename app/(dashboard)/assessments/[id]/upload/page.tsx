@@ -1,18 +1,36 @@
 "use client"
 
-import { useState, use } from "react"
+import { useState, use, useEffect } from "react"
 import { useRouter } from "next/navigation"
 
 export default function UploadSubmissionPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
   const { id: assessmentId } = use(params)
   
-  // Note: For MVP, we'd normally select a student from a dropdown, 
-  // but to keep this simple & testable right away, we'll use a hardcoded student ID or text input.
   const [studentId, setStudentId] = useState("")
+  const [students, setStudents] = useState<{id: string, name: string}[]>([])
+  const [isLoadingStudents, setIsLoadingStudents] = useState(true)
   const [file, setFile] = useState<File | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState("")
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const res = await fetch("/api/students")
+        if (res.ok) {
+          const data = await res.json()
+          const allStudents = data.flatMap((g: any) => g.students || [])
+          setStudents(allStudents)
+        }
+      } catch (err) {
+        console.error("Failed to load students", err)
+      } finally {
+        setIsLoadingStudents(false)
+      }
+    }
+    fetchStudents()
+  }, [])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -71,16 +89,25 @@ export default function UploadSubmissionPage({ params }: { params: Promise<{ id:
         )}
 
         <div>
-           <label className="block text-sm font-medium text-gray-700 mb-2">Student ID</label>
-           <input 
-             type="text" 
-             value={studentId}
-             onChange={(e) => setStudentId(e.target.value)}
-             className="w-full px-3 py-2 border rounded-md"
-             placeholder="Enter Student ID (e.g., from DB)"
-             required
-           />
-           <p className="text-xs text-gray-500 mt-1">For this MVP test, paste an existing Student ID from your database.</p>
+           <label className="block text-sm font-medium text-gray-700 mb-2">Student</label>
+           {isLoadingStudents ? (
+             <div className="text-sm text-gray-500 py-2">Loading students...</div>
+           ) : (
+             <select
+               value={studentId}
+               onChange={(e) => setStudentId(e.target.value)}
+               className="w-full px-3 py-2 border rounded-md bg-white"
+               required
+             >
+               <option value="" disabled>Select a student</option>
+               {students.map((student) => (
+                 <option key={student.id} value={student.id}>
+                   {student.name}
+                 </option>
+               ))}
+             </select>
+           )}
+           <p className="text-xs text-gray-500 mt-1">Select the student whose submission you are uploading.</p>
         </div>
 
         <div>
