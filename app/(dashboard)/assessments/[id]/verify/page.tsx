@@ -44,6 +44,15 @@ export default function VerifySubmissionPage({ params }: { params: Promise<{ id:
     setAnswers(prev => ({ ...prev, [qNum]: value }))
   }
 
+  // Real-time grading helper matching the backend logic
+  const normalizeAnswer = (str: string) => (str || "").replace(/\s+/g, "").toLowerCase()
+
+  const checkIsCorrect = (qNum: string, studentAnswer: string) => {
+    const masterQ = masterQuestions.find(q => String(q.questionNumber) === qNum)
+    if (!masterQ) return null
+    return normalizeAnswer(studentAnswer) === normalizeAnswer(masterQ.correctAnswer)
+  }
+
   const handleSave = async () => {
     setIsSaving(true)
     try {
@@ -142,16 +151,31 @@ export default function VerifySubmissionPage({ params }: { params: Promise<{ id:
               masterQuestions.map((q) => {
                 const qNum = String(q.questionNumber);
                 const answer = answers[qNum] || "";
+                const isCorrect = checkIsCorrect(qNum, answer);
+                
                 return (
-                  <div key={qNum} className="flex flex-col">
-                    <label className="text-sm font-medium text-gray-700 mb-1">
-                      Question {qNum}
-                    </label>
+                  <div key={qNum} className="flex flex-col mb-2">
+                    <div className="flex justify-between items-end mb-1">
+                      <label className="text-sm font-medium text-gray-700">
+                        Question {qNum}
+                      </label>
+                      {isCorrect !== null && (
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                          {isCorrect ? 'Correct ✓' : 'Incorrect ✗'}
+                        </span>
+                      )}
+                    </div>
                     <input
                       type="text"
                       value={answer}
                       onChange={(e) => handleAnswerChange(qNum, e.target.value)}
-                      className="px-3 py-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                      className={`px-3 py-2 border rounded-md focus:ring-2 focus:outline-none ${
+                        isCorrect === null 
+                          ? 'border-gray-300 focus:ring-indigo-500' 
+                          : isCorrect 
+                            ? 'border-green-300 focus:ring-green-500 bg-green-50' 
+                            : 'border-red-300 focus:ring-red-500 bg-red-50'
+                      }`}
                     />
                   </div>
                 )
