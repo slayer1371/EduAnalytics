@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
   try {
-    const { submissionId, answers } = await req.json()
+    const { submissionId, answers, correctOverrides = {} } = await req.json()
     
     if (!submissionId || !answers) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
@@ -41,9 +41,16 @@ export async function POST(req: Request) {
       // The answers object is keyed by question number (as a string)
       const studentExtractedAnswer = answers[String(question.questionNumber)]
       
-      const isCorrect = studentExtractedAnswer 
-         ? normalizeAnswer(studentExtractedAnswer) === normalizeAnswer(question.correctAnswer)
-         : false
+      let isCorrect = false
+      if (correctOverrides[String(question.questionNumber)] !== undefined) {
+        // Teacher manually overrode this question's grade
+        isCorrect = correctOverrides[String(question.questionNumber)]
+      } else {
+        // Fallback to strict normalized comparison
+        isCorrect = studentExtractedAnswer 
+          ? normalizeAnswer(studentExtractedAnswer) === normalizeAnswer(question.correctAnswer)
+          : false
+      }
 
       studentResponses.push({
         studentId,

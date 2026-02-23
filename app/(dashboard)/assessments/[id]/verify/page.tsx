@@ -12,6 +12,7 @@ export default function VerifySubmissionPage({ params }: { params: Promise<{ id:
   const imgUrl = searchParams.get("img")
 
   const [answers, setAnswers] = useState<Record<string, string>>({})
+  const [correctOverrides, setCorrectOverrides] = useState<Record<string, boolean>>({})
   const [masterQuestions, setMasterQuestions] = useState<any[]>([])
   const [isSaving, setIsSaving] = useState(false)
 
@@ -48,9 +49,19 @@ export default function VerifySubmissionPage({ params }: { params: Promise<{ id:
   const normalizeAnswer = (str: string) => (str || "").replace(/\s+/g, "").toLowerCase()
 
   const checkIsCorrect = (qNum: string, studentAnswer: string) => {
+    if (correctOverrides[qNum] !== undefined) {
+      return correctOverrides[qNum]
+    }
     const masterQ = masterQuestions.find(q => String(q.questionNumber) === qNum)
     if (!masterQ) return null
     return normalizeAnswer(studentAnswer) === normalizeAnswer(masterQ.correctAnswer)
+  }
+
+  const toggleOverride = (qNum: string, currentStatus: boolean) => {
+    setCorrectOverrides(prev => ({
+      ...prev,
+      [qNum]: !currentStatus
+    }))
   }
 
   const handleSave = async () => {
@@ -61,7 +72,8 @@ export default function VerifySubmissionPage({ params }: { params: Promise<{ id:
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           submissionId,
-          answers
+          answers,
+          correctOverrides
         })
       })
 
@@ -69,7 +81,7 @@ export default function VerifySubmissionPage({ params }: { params: Promise<{ id:
       if (!res.ok) throw new Error(data.error || "Failed to save")
 
       alert("Success! Answers verified, graded, and saved to DB. Analytics engine triggered.")
-      router.push(`/assessments/${assessmentId}/responses`)
+      router.push(`/dashboard`)
     } catch (e: any) {
       console.error(e)
       alert("Failed to save: " + e.message)
@@ -160,9 +172,16 @@ export default function VerifySubmissionPage({ params }: { params: Promise<{ id:
                         Question {qNum}
                       </label>
                       {isCorrect !== null && (
-                        <span className={`text-xs font-bold px-2 py-0.5 rounded ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                        <button
+                          type="button"
+                          onClick={() => toggleOverride(qNum, isCorrect)}
+                          className={`text-xs font-bold px-2 py-0.5 rounded cursor-pointer hover:opacity-80 transition-opacity ${
+                            isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                          }`}
+                          title="Click to manually override this grade"
+                        >
                           {isCorrect ? 'Correct ✓' : 'Incorrect ✗'}
-                        </span>
+                        </button>
                       )}
                     </div>
                     <input
