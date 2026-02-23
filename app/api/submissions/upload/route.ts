@@ -3,8 +3,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { extractHandwrittenAnswers } from "@/lib/vision"
-import { writeFile } from "fs/promises"
-import path from "path"
+import { put } from "@vercel/blob"
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions)
@@ -26,11 +25,14 @@ export async function POST(req: Request) {
     const base64Image = buffer.toString("base64")
     const mimeType = file.type
 
-    // Save the file to public/uploads
+    // Save the file to Vercel Blob instead of local filesystem
     const safeFilename = file.name.replace(/[^a-zA-Z0-9.-]/g, "_")
     const filename = `uploaded-${Date.now()}-${safeFilename}`
-    const filepath = path.join(process.cwd(), "public", "uploads", filename)
-    await writeFile(filepath, buffer)
+    
+    // Upload the file directly to Vercel Blob
+    const blob = await put(filename, buffer, {
+      access: 'public',
+    })
 
     // Extract answers directly from the image using Gemini 2.0 Flash Vision
     const parsedAnswers = await extractHandwrittenAnswers(base64Image, mimeType)
@@ -45,8 +47,8 @@ export async function POST(req: Request) {
        return NextResponse.json({ error: "Student not found or unauthorized" }, { status: 403 })
     }
 
-    // Save the record
-    const scanUrlPlaceholder = `/uploads/${filename}`
+    // Save the record using the Vercel Blob URL
+    const scanUrlPlaceholder = blob.url
     const submission = await prisma.studentAssessment.create({
       data: {
         studentId,
