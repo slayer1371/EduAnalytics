@@ -10,6 +10,19 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
  * @returns A JSON string mapping question numbers to the student's handwritten answers
  */
 export async function extractHandwrittenAnswers(imageBase64: string, mimeType: string) {
+  if (process.env.MOCK_GEMINI === "true") {
+    console.log("[DEV] Mocking Gemini Vision response...");
+    // Simulate a slight delay to mimic network latency
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    return {
+      "1": "2.73",
+      "2": "0.603",
+      "3": "6 ounces cereal",
+      "4": "42",
+      "5": "3.14"
+    };
+  }
+
   const prompt = `
     You are an expert teacher's assistant scoring a math/general worksheet.
     

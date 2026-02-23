@@ -32,6 +32,7 @@ export async function POST(req: Request) {
     // Upload the file directly to Vercel Blob
     const blob = await put(filename, buffer, {
       access: 'public',
+      contentType: mimeType,
     })
 
     // Extract answers directly from the image using Gemini 2.0 Flash Vision
@@ -62,7 +63,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ 
       success: true, 
       submissionId: submission.id,
-      aiExtraction: parsedAnswers 
+      aiExtraction: parsedAnswers,
+      scanImageUrl: scanUrlPlaceholder
     })
     
   } catch (error) {
