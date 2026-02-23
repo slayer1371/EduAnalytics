@@ -14,6 +14,8 @@ model User {
   name         String
   assessments  Assessment[]
   groups       StudentGroup[]
+  skills       Skill[]
+  resources    Resource[]
 }
 
 model Assessment {
@@ -23,8 +25,9 @@ model Assessment {
   userId      String
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   rawPdfUrl   String
-  createdAt   DateTime   @default(now())
-  questions   Question[]
+  createdAt         DateTime          @default(now())
+  questions         Question[]
+  studentAssessments StudentAssessment[]
 }
 
 model Question {
@@ -44,6 +47,8 @@ model Skill {
   description    String
   subject        String
   gradeLevel     String
+  userId         String           @default("cmlykejn20000jp04tsnq0ov0")
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   questions      QuestionSkill[]
   resources      SkillResource[]
   recommendations Recommendation[]
@@ -72,6 +77,18 @@ model Student {
   group           StudentGroup      @relation(fields: [groupId], references: [id], onDelete: Cascade)
   responses       StudentResponse[]
   recommendations Recommendation[]
+  assessments     StudentAssessment[]
+}
+
+model StudentAssessment {
+  id           String            @id @default(cuid())
+  studentId    String
+  student      Student           @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  assessmentId String
+  assessment   Assessment        @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  scanImageUrl String
+  status       String            @default("PENDING_REVIEW")
+  createdAt    DateTime          @default(now())
 }
 
 model StudentResponse {
@@ -90,6 +107,8 @@ model Resource {
   url             String
   type            String
   description     String
+  userId          String           @default("cmlykejn20000jp04tsnq0ov0")
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   skills          SkillResource[]
   recommendations Recommendation[]
 }

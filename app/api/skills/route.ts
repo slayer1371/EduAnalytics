@@ -8,6 +8,7 @@ export async function GET() {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
   const skills = await prisma.skill.findMany({
+    where: { userId: session.user.id },
     orderBy: { name: "asc" }
   })
   
@@ -26,7 +27,7 @@ export async function POST(req: Request) {
     }
 
     const skill = await prisma.skill.create({
-      data: { name, subject, gradeLevel, description: description || "" }
+      data: { name, subject, gradeLevel, description: description || "", userId: session.user.id }
     })
     
     return NextResponse.json(skill, { status: 201 })

@@ -86,7 +86,7 @@ export default function ResponsesPage() {
         body: JSON.stringify({ responses: payload })
       })
       if (res.ok) {
-        router.push("/dashboard")
+        router.push("/assessments")
       }
     } catch (e) {
       console.error(e)
