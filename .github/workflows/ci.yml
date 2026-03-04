@@ -20,10 +20,12 @@ jobs:
     - run: npm ci
       env:
         DATABASE_URL: "postgresql://dummy"
-    - run: npm run build
+    - name: Run Linter
+      run: npm run lint
+    - name: Build Next.js
+      run: npm run build
       env:
         DATABASE_URL: "postgresql://dummy"
-        NEXT_DISABLE_ESLINT: "1"
         NEXTAUTH_SECRET: "dummy"
         NEXTAUTH_URL: "http://localhost:3000"
         GEMINI_API_KEY: "dummy"

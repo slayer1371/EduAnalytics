@@ -28,14 +28,13 @@ export async function GET(
     })
       
     return NextResponse.json({ assessment, responses: existingResponses })
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: "Server error" }, { status: 500 })
   }
 }
 
 export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
+  req: Request
 ) {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -60,7 +59,7 @@ export async function POST(
       // Then insert new ones
       if (responses.length > 0) {
         await tx.studentResponse.createMany({
-          data: responses.map((r: any) => ({
+          data: responses.map((r: { studentId: string, questionId: string, correct: boolean }) => ({
              studentId: r.studentId,
              questionId: r.questionId,
              correct: r.correct,

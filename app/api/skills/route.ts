@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     })
     
     return NextResponse.json(skill, { status: 201 })
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: "Failed to create skill" }, { status: 500 })
   }
 }

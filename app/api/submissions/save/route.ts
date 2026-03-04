@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     const normalizeAnswer = (str: string) => (str || "").replace(/\s+/g, "").toLowerCase()
     
     // 2. Grade the provided answers against the correct answers and prepare DB records
-    const studentResponses: any[] = []
+    const studentResponses: { studentId: string, questionId: string, response: string, correct: boolean }[] = []
     
     for (const question of assessment.questions) {
       // The answers object is keyed by question number (as a string)
@@ -66,7 +66,7 @@ export async function POST(req: Request) {
       await tx.studentResponse.deleteMany({
         where: { 
           studentId, 
-          questionId: { in: assessment.questions.map((q: any) => q.id) } 
+          questionId: { in: assessment.questions.map((q: {id: string}) => q.id) } 
         }
       })
       

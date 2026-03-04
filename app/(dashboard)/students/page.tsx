@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Users, User, ArrowRight, Loader2, Plus, Target } from "lucide-react"
+import { Users, User, ArrowRight, Loader2, Plus } from "lucide-react"
 
 type Student = { id: string; name: string }
 type Group = { id: string; name: string; students: Student[] }
@@ -35,7 +35,7 @@ export default function StudentsPage() {
         body: JSON.stringify({ name })
       })
       if (res.ok) loadGroups()
-    } catch (e) {
+    } catch {
       alert("Failed to create group")
     }
   }
@@ -51,7 +51,7 @@ export default function StudentsPage() {
         body: JSON.stringify({ name, groupId })
       })
       if (res.ok) loadGroups()
-    } catch (e) {
+    } catch {
       alert("Failed to add student")
     }
   }

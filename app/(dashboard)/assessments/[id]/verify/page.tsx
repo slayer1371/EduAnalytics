@@ -13,7 +13,7 @@ export default function VerifySubmissionPage({ params }: { params: Promise<{ id:
 
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [correctOverrides, setCorrectOverrides] = useState<Record<string, boolean>>({})
-  const [masterQuestions, setMasterQuestions] = useState<any[]>([])
+  const [masterQuestions, setMasterQuestions] = useState<{id: string, questionNumber: number, correctAnswer: string}[]>([])
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
@@ -82,9 +82,9 @@ export default function VerifySubmissionPage({ params }: { params: Promise<{ id:
 
       alert("Success! Answers verified, graded, and saved to DB. Analytics engine triggered.")
       router.push(`/dashboard`)
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(e)
-      alert("Failed to save: " + e.message)
+      alert("Failed to save: " + (e instanceof Error ? e.message : String(e)))
     } finally {
       setIsSaving(false)
     }
@@ -109,7 +109,7 @@ export default function VerifySubmissionPage({ params }: { params: Promise<{ id:
         
         {/* Left Side: The Image/PDF Preview */}
         <div className="bg-gray-100 p-4 rounded-lg border flex flex-col items-center justify-center min-h-[600px] h-full overflow-hidden">
-          <p className="text-gray-500 mb-4 font-medium">Original Student Submission</p>
+          <p className="text-gray-500 mb-4 font-medium">Original Student&apos;s Submission</p>
           <div className="w-full h-full min-h-[500px] bg-white border border-gray-300 rounded-md overflow-hidden flex items-center justify-center">
              {imgUrl ? (
                isPdf ? (
@@ -130,7 +130,7 @@ export default function VerifySubmissionPage({ params }: { params: Promise<{ id:
         <div className="bg-emerald-50 p-6 rounded-lg border border-emerald-200 shadow-sm h-fit">
           <h2 className="text-lg font-semibold mb-4 border-b border-emerald-200 pb-2 text-emerald-800">Master Key</h2>
           <p className="text-sm text-emerald-600 mb-6 font-medium">
-            Correct answers stored for this assessment. Use this to verify the AI's extraction.
+            Correct answers stored for this assessment. Use this to verify the AI&apos;s extraction.
           </p>
 
           <div className="space-y-4">
@@ -149,7 +149,7 @@ export default function VerifySubmissionPage({ params }: { params: Promise<{ id:
 
         {/* Right Side: The Extracted Answers Form */}
         <div className="bg-white p-6 rounded-lg border shadow-sm h-fit">
-          <h2 className="text-lg font-semibold mb-4 border-b pb-2">Student's Extracted Answers</h2>
+          <h2 className="text-lg font-semibold mb-4 border-b pb-2">Student&apos;s Extracted Answers</h2>
           <p className="text-sm text-gray-500 mb-6">
             Review and correct any mistakes made by the AI before saving to analytics.
           </p>

@@ -29,7 +29,7 @@ export async function GET(
     
     if (!assessment) return NextResponse.json({ error: "Not found" }, { status: 404 })
     return NextResponse.json(assessment)
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: "Server error" }, { status: 500 })
   }
 }
@@ -55,7 +55,7 @@ export async function POST(
 
     // Execute updates in a transaction
     await prisma.$transaction(
-      mappings.map((m: any) => {
+      mappings.map((m: { questionId: string, skillIds: string[] }) => {
         return prisma.question.update({
           where: { id: m.questionId },
           data: {

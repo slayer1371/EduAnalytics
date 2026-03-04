@@ -56,7 +56,7 @@ export async function POST(req: Request) {
       data: { name, groupId }
     })
     return NextResponse.json(student)
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 })
+  } catch (e: unknown) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : "Failed to create student" }, { status: 500 })
   }
 }

@@ -20,7 +20,7 @@ export default function UploadSubmissionPage({ params }: { params: Promise<{ id:
         const res = await fetch("/api/students")
         if (res.ok) {
           const data = await res.json()
-          const allStudents = data.flatMap((g: any) => g.students || [])
+          const allStudents = data.flatMap((g: { students?: {id: string, name: string}[] }) => g.students || [])
           setStudents(allStudents)
         }
       } catch (err) {
@@ -70,8 +70,8 @@ export default function UploadSubmissionPage({ params }: { params: Promise<{ id:
       const encodedUrl = encodeURIComponent(data.scanImageUrl)
       router.push(`/assessments/${assessmentId}/verify?sub=${data.submissionId}&ai=${encodedJSON}&img=${encodedUrl}`)
 
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err))
     } finally {
       setIsUploading(false)
     }

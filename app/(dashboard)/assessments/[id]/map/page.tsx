@@ -105,7 +105,7 @@ export default function MapSkillsPage() {
             <MapPin className="w-6 h-6 text-amber mr-3" />
             Map Skills
           </h1>
-          <p className="text-slate mt-1">Tag questions in <span className="text-ink font-medium">"{assessment.title}"</span> with educational skills.</p>
+          <p className="text-slate mt-1">Tag questions in <span className="text-ink font-medium">&quot;{assessment.title}&quot;</span> with educational skills.</p>
         </div>
       </div>
 

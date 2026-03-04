@@ -14,7 +14,7 @@ export async function generateStudentRecommendations(studentId: string) {
   })
 
   // 2. Aggregate performance by skill
-  const skillStats: Record<string, { total: number; correct: number; skill: any }> = {}
+  const skillStats: Record<string, { total: number; correct: number; skill: { id: string, name: string } }> = {}
   
   responses.forEach(r => {
     r.question.skills.forEach(qs => {
@@ -31,7 +31,7 @@ export async function generateStudentRecommendations(studentId: string) {
   })
 
   // 3. Calculate mastery and assign recommendations
-  const newRecommendations: any[] = []
+  const newRecommendations: { studentId: string, skillId: string, resourceId: string, score: number }[] = []
   
   for (const [skillId, stats] of Object.entries(skillStats)) {
     const masteryPercent = (stats.correct / stats.total) * 100

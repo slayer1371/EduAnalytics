@@ -8,7 +8,7 @@ import { Loader2, ArrowLeft, Save, CheckCircle2, XCircle } from "lucide-react"
 type Student = { id: string; name: string }
 type Group = { id: string; name: string; students: Student[] }
 type Question = { id: string; questionNumber: number }
-type AssessmentResponse = { assessment: { title: string; questions: Question[] }, responses: any[] }
+type AssessmentResponse = { assessment: { title: string; questions: Question[] }, responses: { studentId: string; questionId: string; correct: boolean }[] }
 
 // State tracking: record[studentId][questionId] = boolean (correct)
 type ResponseMap = Record<string, Record<string, boolean>>
@@ -38,7 +38,7 @@ export default function ResponsesPage() {
         
         const loaded: ResponseMap = {}
         if (assessmentData.responses) {
-          assessmentData.responses.forEach((r: any) => {
+          assessmentData.responses.forEach((r: { studentId: string; questionId: string; correct: boolean }) => {
             if (!loaded[r.studentId]) loaded[r.studentId] = {}
             loaded[r.studentId][r.questionId] = r.correct
           })
@@ -71,7 +71,7 @@ export default function ResponsesPage() {
 
   const handleSave = async () => {
     setSaving(true)
-    const payload: any[] = []
+    const payload: { studentId: string; questionId: string; correct: boolean }[] = []
     
     Object.entries(responses).forEach(([studentId, qs]) => {
       Object.entries(qs).forEach(([questionId, correct]) => {
@@ -106,7 +106,7 @@ export default function ResponsesPage() {
         <Link href="/assessments" className="text-slate hover:text-ink transition-colors"><ArrowLeft className="w-6 h-6" /></Link>
         <div>
           <h1 className="font-serif text-3xl text-ink">Enter Responses</h1>
-          <p className="text-slate mt-1">Record score data for <span className="text-ink font-medium">"{assessment.title}"</span>.</p>
+          <p className="text-slate mt-1">Record score data for <span className="text-ink font-medium">&quot;{assessment.title}&quot;</span>.</p>
         </div>
       </div>
 

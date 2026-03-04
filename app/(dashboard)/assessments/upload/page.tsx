@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import dynamic from "next/dynamic"
 import { ocr } from "@/lib/ocr"
@@ -25,7 +25,6 @@ export default function UploadAssessmentPage() {
   
   // OCR Progress
   const [processingPage, setProcessingPage] = useState(0)
-  const [ocrText, setOcrText] = useState<string>("")
   
   // Review Mode Editing
   const [title, setTitle] = useState("New Assessment")
@@ -33,8 +32,6 @@ export default function UploadAssessmentPage() {
   const [questions, setQuestions] = useState<ParsedQuestion[]>([])
   
   const [saving, setSaving] = useState(false)
-  const documentRef = useRef<HTMLDivElement>(null)
-
   useEffect(() => {
     import("react-pdf").then((mod) => {
       mod.pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${mod.pdfjs.version}/build/pdf.worker.min.mjs`
@@ -77,7 +74,6 @@ export default function UploadAssessmentPage() {
       }
     }
     
-    setOcrText(fullText)
     await parseTextToQuestions(fullText)
     setStep("REVIEW")
   }

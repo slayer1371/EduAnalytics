@@ -36,11 +36,11 @@ export async function GET(
     })
 
     const skillStats: Record<string, { total: number, correct: number, name: string, subject: string }> = {}
-    let sortedAssessments = new Set()
+    const sortedAssessments = new Set()
 
     responses.forEach(r => {
       sortedAssessments.add(r.question.assessment.title)
-      r.question.skills.forEach((qs: any) => {
+      r.question.skills.forEach((qs: { skillId: string, skill: { name: string, subject: string } }) => {
         const sid = qs.skillId
         if (!skillStats[sid]) {
           skillStats[sid] = { total: 0, correct: 0, name: qs.skill.name, subject: qs.skill.subject }
@@ -74,8 +74,8 @@ export async function GET(
         recommendations
     })
 
-  } catch (e) {
-    console.error(e)
+  } catch {
+    console.error("Failed to load student data")
     return NextResponse.json({ error: "Failed to load student data" }, { status: 500 })
   }
 }

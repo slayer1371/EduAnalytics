@@ -39,6 +39,7 @@ export default function ResourcesPage() {
     })
   }
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchData() }, [])
 
   const toggleSkill = (id: string) => {

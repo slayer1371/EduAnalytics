@@ -56,7 +56,7 @@ export default function LandingPage() {
               <ScanText className="text-amber w-5 h-5" style={{ color: '#b07d1e' }} />
             </div>
             <h3 className="font-serif text-xl text-ink mb-2">Instant OCR Ingestion</h3>
-            <p className="text-slate text-sm leading-relaxed">Drag and drop printed assessments. We'll automatically digitize questions and student responses.</p>
+            <p className="text-slate text-sm leading-relaxed">Drag and drop printed assessments. We&apos;ll automatically digitize questions and student responses.</p>
           </div>
           <div className="card accent-left-sage p-7 animate-fade-up-delay-2 hover:translate-y-[-2px] transition-transform">
             <div className="w-11 h-11 rounded-xl bg-sage-muted flex items-center justify-center mb-5">

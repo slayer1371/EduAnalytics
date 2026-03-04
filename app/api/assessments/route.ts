@@ -37,7 +37,7 @@ export async function POST(req: Request) {
         userId: session.user.id,
         rawPdfUrl: rawPdfUrl || "",
         questions: {
-          create: questions.map((q: any) => ({
+          create: questions.map((q: { number: number, text: string, answer?: string }) => ({
             questionNumber: q.number,
             questionText: q.text,
             correctAnswer: q.answer || ""
