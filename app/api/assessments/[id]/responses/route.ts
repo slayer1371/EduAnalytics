@@ -45,7 +45,7 @@ export async function POST(
     // responses: { studentId: string, questionId: string, correct: boolean }[]
 
     // Execute bulk upsert (delete then recreate for simplicity in MVP)
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: any) => {
       // First, delete existing responses matching these student/question pairs
       for (const res of responses) {
         // Find existing response to delete if it exists (avoids composite key issues for SQLite)

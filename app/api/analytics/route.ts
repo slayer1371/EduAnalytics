@@ -25,7 +25,7 @@ export async function GET() {
       })
     ])
 
-    const totalStudents = groups.reduce((acc, sum) => acc + sum.students.length, 0)
+    const totalStudents = groups.reduce((acc: number, sum: { students: any[] }) => acc + sum.students.length, 0)
     
     // 2. Compute mastery metrics. (In a real app, do this more efficiently or via materialized views)
     const allResponses = await prisma.studentResponse.findMany({
@@ -42,11 +42,11 @@ export async function GET() {
     let totalQs = 0
     let totalCorrects = 0
 
-    allResponses.forEach(r => {
+    allResponses.forEach((r: any) => {
       totalQs++
       if (r.correct) totalCorrects++
       
-      r.question.skills.forEach(qs => {
+      r.question.skills.forEach((qs: any) => {
         const id = qs.skillId
         if (!skillMastery[id]) skillMastery[id] = { total: 0, correct: 0, name: qs.skill.name }
         skillMastery[id].total++
@@ -66,8 +66,8 @@ export async function GET() {
 
     // 3. Regen and fetch recent recommendations 
     // (For MVP demo, we'll regen on fetch to keep data fresh, normally done on async worker)
-    const allStudentIds = groups.flatMap(g => g.students.map(s => s.id))
-    await Promise.all(allStudentIds.map(sid => generateStudentRecommendations(sid)))
+    const allStudentIds = groups.flatMap((g: any) => g.students.map((s: any) => s.id))
+    await Promise.all(allStudentIds.map((sid: string) => generateStudentRecommendations(sid)))
     
     const recentRecommendations = await prisma.recommendation.findMany({
       where: { student: { group: { userId } } },
@@ -85,7 +85,7 @@ export async function GET() {
         totalAssessments: stats?._count.assessments || 0,
         totalStudents,
         overallMastery: Math.round(overallMastery),
-        criticalGaps: recentRecommendations.filter(r => r.score > 20).length // proxy for < 80% mastery
+        criticalGaps: recentRecommendations.filter((r: any) => r.score > 20).length // proxy for < 80% mastery
       },
       skillCharts: chartData,
       recentRecommendations
