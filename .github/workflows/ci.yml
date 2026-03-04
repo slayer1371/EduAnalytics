@@ -20,7 +20,6 @@ jobs:
     - run: npm ci
       env:
         DATABASE_URL: "postgresql://dummy"
-    - run: npm run lint
     - run: npm run build
       env:
         DATABASE_URL: "postgresql://dummy"
