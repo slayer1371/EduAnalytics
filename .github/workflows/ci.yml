@@ -18,6 +18,8 @@ jobs:
         node-version: '20.x'
         cache: 'npm'
     - run: npm ci
+      env:
+        DATABASE_URL: "postgresql://dummy"
     - run: npm run lint
     - run: npm run build
       env:
