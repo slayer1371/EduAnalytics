@@ -8,6 +8,7 @@ export async function GET() {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
   const resources = await prisma.resource.findMany({
+    where: { userId: session.user.id },
     include: {
       skills: { include: { skill: true } }
     },
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
 
     const resource = await prisma.resource.create({
       data: {
-        title, url, type, description: description || "",
+        title, url, type, description: description || "", userId: session.user.id,
         skills: {
           create: (skillIds || []).map((id: string) => ({
              skill: { connect: { id } }

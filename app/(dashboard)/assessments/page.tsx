@@ -101,10 +101,12 @@ export default function AssessmentsPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center space-x-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Link href={`/assessments/${assessment.id}/map`} className="text-sm font-medium hover:text-amber transition-colors" style={{ color: '#b07d1e' }}>Map Skills</Link>
+                      <div className="flex items-center space-x-3 text-sm font-medium">
+                        <Link href={`/assessments/${assessment.id}/map`} className="hover:text-amber transition-colors" style={{ color: '#b07d1e' }}>Map Skills</Link>
                         <span className="text-border-strong">|</span>
-                        <Link href={`/assessments/${assessment.id}/responses`} className="text-sm font-medium text-sage hover:text-sage/80 transition-colors">Responses</Link>
+                        <Link href={`/assessments/${assessment.id}/responses`} className="text-sage hover:text-sage/80 transition-colors">Responses</Link>
+                        <span className="text-border-strong">|</span>
+                        <Link href={`/assessments/${assessment.id}/upload`} className="text-indigo-600 hover:text-indigo-800 transition-colors">Grade Scans</Link>
                       </div>
                     </td>
                   </tr>
