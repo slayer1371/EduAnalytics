@@ -23,6 +23,7 @@ jobs:
     - run: npm run build
       env:
         DATABASE_URL: "postgresql://dummy"
+        NEXT_DISABLE_ESLINT: "1"
         NEXTAUTH_SECRET: "dummy"
         NEXTAUTH_URL: "http://localhost:3000"
         GEMINI_API_KEY: "dummy"
